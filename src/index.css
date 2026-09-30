@@ -1,0 +1,235 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens — White + Burgundy.
+ * Change the theme here; components only use these tokens.
+ */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Surfaces */
+  --color-canvas: #f1f3f6; /* page background */
+  --color-surface: #ffffff; /* cards, sidebar, header, modals */
+  --color-surface-2: #fcfcfc; /* inputs, inset panels */
+  --color-surface-3: #f3f3f3; /* hover, neutral chips */
+  --color-line: #e5e5e5;
+  --color-line-strong: #d4d4d4;
+
+  /* Text */
+  --color-ink: #1f1f1f;
+  --color-ink-soft: #404040;
+  --color-muted: #6b6b6b;
+
+  /* Brand — burgundy */
+  --color-brand-50: #f7e9ed; /* light burgundy: highlights, selected rows */
+  --color-brand-100: #efd3db;
+  --color-brand-200: #dba5b4;
+  --color-brand-500: #800020; /* primary */
+  --color-brand-600: #6e001c;
+  --color-brand-700: #5c0015; /* dark burgundy: hover / pressed */
+
+  /* Status */
+  --color-success: #198754;
+  --color-success-soft: #e8f5ee;
+  --color-warning: #b45309; /* darker than #D97706 for text contrast on white */
+  --color-warning-soft: #fdf3e3;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fdecec;
+  --color-info: #1d4ed8;
+  --color-info-soft: #eaf0fd;
+
+  /* Categorical chart palette (muted, colour-blind distinguishable) */
+  --color-chart-1: #800020;
+  --color-chart-2: #475569;
+  --color-chart-3: #b7791f;
+  --color-chart-4: #2f6f73;
+  --color-chart-5: #c4a3ad;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+    background-color: var(--color-canvas);
+    background-image:
+      radial-gradient(ellipse 36rem 28rem at 100% 0%, rgb(199 218 240 / 42%), transparent 72%),
+      radial-gradient(ellipse 32rem 25rem at 0% 4%, rgb(246 225 211 / 50%), transparent 72%),
+      radial-gradient(ellipse 42rem 30rem at 12% 100%, rgb(218 228 241 / 30%), transparent 72%),
+      linear-gradient(138deg, #f4f5f7 0%, #eef1f5 54%, #f5f2f1 100%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    background: var(--color-brand-100);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+}
+
+/* Soft atmospheric canvas with curved edge detailing, kept behind app surfaces. */
+.app-backdrop {
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+}
+
+.app-backdrop::before {
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  content: '';
+  inset: 0;
+}
+
+.app-backdrop::before {
+  background:
+    radial-gradient(ellipse 38rem 30rem at 100% 0%, rgb(128 0 32 / 7%), transparent 72%),
+    radial-gradient(ellipse 34rem 28rem at 0% 3%, rgb(219 165 180 / 16%), transparent 72%),
+    radial-gradient(ellipse 44rem 32rem at 12% 100%, rgb(221 225 233 / 45%), transparent 72%),
+    linear-gradient(138deg, #f7f4f5 0%, #f0f1f4 52%, #f7f4f4 100%);
+}
+
+@utility card-shadow {
+  box-shadow: 0 1px 2px rgb(16 16 16 / 0.04), 0 1px 3px rgb(16 16 16 / 0.03);
+}
+
+@keyframes dashboard-card-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-card {
+  animation: dashboard-card-enter 360ms cubic-bezier(.2,.75,.25,1) both;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.stat-card-icon {
+  transition: transform 220ms ease, background-color 220ms ease;
+}
+
+.stat-card:hover .stat-card-icon {
+  transform: scale(1.04);
+  background-color: var(--color-brand-100);
+}
+
+.stat-card-progress {
+  transition: width 420ms cubic-bezier(.2,.75,.25,1);
+}
+
+.crm-table thead th:first-child {
+  border-top-left-radius: 0.7rem;
+}
+
+.crm-table thead th:last-child {
+  border-top-right-radius: 0.7rem;
+}
+
+.crm-table tbody tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+.crm-table tbody tr:nth-child(even) {
+  background-color: #faf4f6;
+}
+
+.crm-table tbody tr:nth-child(odd):hover,
+.crm-table tbody tr:nth-child(even):hover {
+  background-color: #f4e6eb;
+}
+
+.crm-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.form-control {
+  min-width: 0;
+  border-color: var(--color-line-strong);
+  border-radius: 0.625rem;
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  accent-color: var(--color-brand-500);
+  box-shadow: 0 1px 2px rgb(31 31 31 / 4%);
+  transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+}
+
+.form-control::placeholder {
+  color: #92929a;
+}
+
+.form-control:not(:disabled):hover {
+  border-color: #b88796;
+}
+
+.form-control:focus {
+  border-color: var(--color-brand-500);
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(128 0 32 / 12%);
+}
+
+.form-control[aria-invalid='true']:focus {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px rgb(220 38 38 / 12%);
+}
+
+.form-control:disabled {
+  background-color: #f4f4f5;
+  color: #74747b;
+  box-shadow: none;
+}
+
+select.form-control option:checked,
+select.form-control option:active {
+  background-color: var(--color-brand-500);
+  color: #fff;
+}
+
+input:is([type='date'], [type='datetime-local']) {
+  padding-inline: 0.875rem;
+  color-scheme: light;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  accent-color: var(--color-brand-500);
+}
+
+input:is([type='date'], [type='datetime-local'])::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  margin-left: 0.45rem;
+  padding: 0.35rem;
+  border-radius: 0.45rem;
+  background-color: #f8eef1;
+  filter: invert(12%) sepia(55%) saturate(4958%) hue-rotate(326deg) brightness(72%) contrast(120%);
+  opacity: 0.86;
+  transition: opacity 150ms ease, background-color 150ms ease, transform 150ms ease;
+}
+
+input:is([type='date'], [type='datetime-local'])::-webkit-calendar-picker-indicator:hover {
+  background-color: #f0dfe5;
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+input:is([type='date'], [type='datetime-local']):focus-visible {
+  border-color: var(--color-brand-500);
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(128 0 32 / 12%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
