@@ -7,6 +7,25 @@ export type FieldErrors = Record<string, string>
 
 export const PASSWORD_HINT = 'At least 8 characters with an uppercase letter, a lowercase letter and a number.'
 
+/**
+ * Parses normal decimals and amounts grouped with Indian/standard separators.
+ * Examples: 2.05,00,000 → 20500000 and 2,05,00,000.50 → 20500000.5.
+ */
+export function parseFormattedNumber(value: string): number | null {
+  const raw = value.trim().replace(/\s+/g, '')
+  if (!raw || !/^\d+(?:[.,]\d+)*$/.test(raw)) return null
+
+  const lastSeparator = Math.max(raw.lastIndexOf('.'), raw.lastIndexOf(','))
+  const fraction = lastSeparator === -1 ? '' : raw.slice(lastSeparator + 1)
+  // A final group of up to two digits is a decimal; three digits is a
+  // thousands/lakh group (for example, 2.05,00,000).
+  const hasDecimal = lastSeparator !== -1 && fraction.length <= 2
+  const integer = (hasDecimal ? raw.slice(0, lastSeparator) : raw).replace(/[.,]/g, '')
+  const normalized = hasDecimal ? `${integer}.${fraction}` : integer
+  const parsed = Number(normalized)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
 export const rules = {
   required: (value: string, label: string) => (value.trim() === '' ? `${label} is required.` : null),
   email: (value: string) =>
@@ -39,8 +58,8 @@ export const rules = {
   },
   number: (value: string, label: string, min: number, max: number, integer = false) => {
     if (!value.trim()) return null
-    const n = Number(value)
-    if (Number.isNaN(n)) return `${label} must be a number.`
+    const n = parseFormattedNumber(value)
+    if (n === null) return `${label} must be a number.`
     if (integer && !Number.isInteger(n)) return `${label} must be a whole number.`
     return n < min || n > max ? `${label} must be between ${min} and ${max.toLocaleString('en-IN')}.` : null
   },

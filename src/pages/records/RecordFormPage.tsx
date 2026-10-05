@@ -566,8 +566,8 @@ export function RecordFormPage() {
             <TextField label="Rent amount (₹ / month)" inputMode="decimal" required {...field('rental_amount')} />
           )}
           {shows('security_deposit') && <TextField label="Security deposit (₹)" inputMode="decimal" {...field('security_deposit')} />}
-          {shows('sale_amount') && <TextField label="Expected price (₹)" inputMode="decimal" {...field('sale_amount')} />}
-          {shows('market_price') && <TextField label="Market price (₹)" inputMode="decimal" {...field('market_price')} />}
+          {shows('sale_amount') && <TextField label="Expected price (₹)" hint="Commas or dots are accepted, e.g. 2,05,00,000." inputMode="decimal" {...field('sale_amount')} />}
+          {shows('market_price') && <TextField label="Market price (₹)" hint="Commas or dots are accepted, e.g. 2,05,00,000." inputMode="decimal" {...field('market_price')} />}
         </Section>
 
         <div ref={mediaSection}>
