@@ -201,6 +201,54 @@ export interface PartyPayload {
   notes?: string
 }
 
+/** A buyer / tenant's current search criteria, used for property matching. */
+export interface ClientRequirement {
+  id: number
+  party_id: number
+  transaction_type: 'rental' | 'sale'
+  property_category: 'residential' | 'commercial' | null
+  preferred_city: string
+  preferred_locality: string | null
+  min_budget: number | null
+  max_budget: number | null
+  min_bedrooms: number | null
+  min_bathrooms: number | null
+  min_area_sqft: number | null
+  furnishing: Furnishing | null
+  notes: string | null
+  is_active: boolean
+  updated_at: string
+}
+
+export interface ClientRequirementPayload {
+  party_id: number
+  transaction_type: 'rental' | 'sale'
+  property_category: 'residential' | 'commercial' | ''
+  preferred_city: string
+  preferred_locality: string
+  min_budget: string
+  max_budget: string
+  min_bedrooms: string
+  min_bathrooms: string
+  min_area_sqft: string
+  furnishing: Furnishing | ''
+  notes: string
+  is_active: boolean
+}
+
+export interface PropertyMatch {
+  record: RecordSummary
+  score: number
+  reasons: string[]
+}
+
+export interface ClientMatch {
+  party: Pick<Party, 'id' | 'name' | 'phone' | 'email'>
+  requirement: ClientRequirement
+  score: number
+  reasons: string[]
+}
+
 export interface RecordSummary {
   priority: string
   contact_status: string

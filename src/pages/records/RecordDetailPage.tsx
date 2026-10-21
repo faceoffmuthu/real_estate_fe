@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, Pencil } from 'lucide-react'
 import { CRMPanel, RecordFollowUps, RecordTimeline } from '../../components/records/CRMPanel'
+import { PropertyClientMatches } from '../../components/records/ClientRequirements'
 import { PhoneActions } from '../../components/records/PhoneActions'
 import { ApprovalPanel } from '../../components/records/ApprovalPanel'
 import { ApprovalTimeline } from '../../components/records/ApprovalTimeline'
@@ -135,6 +136,7 @@ export function RecordDetailPage() {
           </Card>
 
           <CRMPanel key={`${r.updated_at}-${r.contact_status}-${r.last_contacted_at}`} record={r} people={data.crm_assignees} canManage={data.can_manage_crm} onChanged={crmChanged} />
+          <PropertyClientMatches recordId={r.id} area={area} />
           <RecordFollowUps recordId={r.id} people={data.crm_assignees} canManage={data.can_manage_crm} onChanged={crmChanged} />
           <RecordTimeline revision={crmRevision} recordId={r.id} canManage={data.can_manage_crm} onChanged={reload} />
           <Card title="Process details">

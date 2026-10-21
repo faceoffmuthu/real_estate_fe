@@ -87,16 +87,20 @@ export async function send<T>(path: string, options: RequestOptions = {}): Promi
   }
 
   let payload: ApiSuccess<T> | ApiFailure | null = null
+  let nonJsonResponse = false
   try {
     payload = await response.json()
   } catch {
-    // Non-JSON response (e.g. Apache error page) handled below.
+    // Non-JSON response (e.g. a missing PHP endpoint served as an HTML page).
+    nonJsonResponse = true
   }
 
   if (!response.ok || !payload || payload.success !== true) {
     const message =
       payload && 'message' in payload && payload.message
         ? payload.message
+        : nonJsonResponse
+          ? 'The backend endpoint is unavailable or has not been deployed. Please update the backend and try again.'
         : `Unexpected server response (${response.status}). Please try again.`
     const errors = payload && payload.success === false && !Array.isArray(payload.errors) ? payload.errors : {}
     if (response.status === 401 && !silent401) unauthorizedListeners.forEach((fn) => fn())

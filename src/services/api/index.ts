@@ -7,6 +7,10 @@ import type {
   Paginated,
   Party,
   PartyPayload,
+  ClientMatch,
+  ClientRequirement,
+  ClientRequirementPayload,
+  PropertyMatch,
   ProcessStage,
   PropertyType,
   PropertyCategory,
@@ -273,4 +277,15 @@ export const partiesApi = {
   lookup: (phone: string, signal?: AbortSignal) =>
     request<{ phone: string; matches: Array<{ id: number; name: string; phone: string }> }>('parties/lookup.php', { query: { phone }, signal }),
   update: (id: number, body: PartyPayload) => send<{ party: Party }>('parties/update.php', { method: 'PUT', body: { id, ...body } }),
+}
+
+export const clientRequirementsApi = {
+  view: (party_id: number, signal?: AbortSignal) =>
+    request<{ requirement: ClientRequirement | null }>('client-requirements/view.php', { query: { party_id }, signal }),
+  save: (body: ClientRequirementPayload) =>
+    send<{ requirement: ClientRequirement }>('client-requirements/save.php', { method: 'PUT', body }),
+  propertyMatches: (party_id: number, signal?: AbortSignal) =>
+    request<{ requirement: ClientRequirement | null; items: PropertyMatch[] }>('client-requirements/matches.php', { query: { party_id }, signal }),
+  clientMatches: (record_id: number, signal?: AbortSignal) =>
+    request<{ items: ClientMatch[] }>('client-requirements/matches.php', { query: { record_id }, signal }),
 }

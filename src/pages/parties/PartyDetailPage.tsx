@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, Pencil } from 'lucide-react'
 import { PartyFormModal } from '../../components/records/PartyFormModal'
 import { PhoneActions } from '../../components/records/PhoneActions'
+import { ClientRequirementPanel } from '../../components/records/ClientRequirements'
 import { StageBadge } from '../../components/records/RecordBadges'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
@@ -121,6 +122,10 @@ export function PartyDetailPage() {
             </Table>
           )}
         </Card>
+
+        <div className="xl:col-span-3">
+          <ClientRequirementPanel partyId={party.id} canManage={party.can_edit === true} area={area} />
+        </div>
       </div>
 
       {party.can_edit && <PartyFormModal party={party} open={editing} onClose={() => setEditing(false)} onSaved={reload} />}
